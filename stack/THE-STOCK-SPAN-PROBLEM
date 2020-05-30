@@ -1,0 +1,82 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+ struct stack
+{
+int a[1000];
+int top;
+int maxSize;
+};
+void initstack(struct stack * p, int maxSize);
+void push(struct stack * p, int item);
+int pop(struct stack * p);
+int isEmpty(struct stack* p);
+void calculateSpan(int *price, int n, int *span);
+void printSpan(int *span, int n);
+
+
+int main()
+{
+    int price[1000],n,i,span[1000];
+    printf("Enter the number of days\n");
+    scanf("%d",&n);  
+    printf("Enter the stock prices\n");
+    for(i=0;i<n;i++)
+    {
+      scanf("%d",price+i);
+    }  
+    calculateSpan(price, n, span);
+    printf("Span values\n");
+    printSpan(span, n); 
+    return 0;
+}
+
+
+void initstack(struct stack * p, int maxSize) {
+	p->top=-1;
+    p->maxSize=maxSize;
+}
+
+void push(struct stack *p, int item)
+{
+  		if (p->top == p->maxSize-1) {
+      printf("Stack is full\n");
+      return;
+   }
+   p->top++;
+   p->a[p->top] =item;
+}
+
+int isEmpty(struct stack* p)
+{
+  return p->top==-1;
+}
+int pop(struct stack* p)
+{
+    int num;
+   if (p->top == -1) {
+      printf("Stack is empty\n");
+      return -1000;
+   }
+   num=p->a[p->top];
+   p->top--;
+   return num;
+}
+
+void calculateSpan(int *price, int n, int *span)
+{
+ span[0] = 1; 
+  
+    for (int i = 1; i < n; i++) { 
+        span[i] = 1;  
+         for (int j = i - 1; (j >= 0) && (price[i] >= price[j]); j--) 
+            span[i]++; 
+}
+
+}
+void printSpan(int span[], int n)
+{
+    int i;
+    for (i = 0; i < n; i++)
+      printf("%d ",span[i]);
+}

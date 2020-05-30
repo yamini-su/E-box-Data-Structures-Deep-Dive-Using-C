@@ -1,0 +1,116 @@
+#include <stdio.h>
+#include <math.h>
+#include <stdlib.h>
+#include <limits.h>
+struct stack
+{
+   int a[1000];
+   int top;
+   int maxSize;
+};
+void initstack(struct stack * p, int maxSize);
+void push(struct stack *p, int item);
+int pop(struct stack* p);
+void moveDisk(char fromPeg, char toPeg, int disk);
+void moveDisksBetweenTwoPoles(struct stack *src, struct stack *dest, char s, char d);
+void hanoiIterative(int num_of_disks, struct stack *src, struct stack *aux, struct stack *dest);
+  
+int main()
+{
+   int num_of_disks;
+   printf("Enter the number of disks\n");
+   scanf("%d",&num_of_disks);
+    struct stack src,dest, aux;
+    initstack(&src,num_of_disks);
+    initstack(&aux,num_of_disks);
+    initstack(&dest,num_of_disks); 
+    hanoiIterative(num_of_disks, &src,&aux,&dest);
+    return 0;
+}
+
+void initstack(struct stack * p, int maxSize) {
+	p->top=-1;
+	p->maxSize=maxSize;
+}
+int isFull(struct stack* stack)  
+{  
+return (stack->top == stack->maxSize - 1);  
+}  
+int isEmpty(struct stack* stack)  
+{  
+return (stack->top == -1);  
+}  
+void push(struct stack *stack, int item)  
+{  
+    if (isFull(stack))  
+        return;  
+    stack -> a[++stack -> top] = item;  
+}  
+int pop(struct stack* stack)  
+{  
+    if (isEmpty(stack))  
+        return INT_MIN;  
+    return stack -> a[stack -> top--];  
+}  
+
+void moveDisk(char fromPeg, char toPeg, int disk)
+{
+    printf("Move the disk %d from \'%c\' to \'%c\'\n",
+           disk, fromPeg, toPeg);
+}
+
+
+void moveDisksBetweenTwoPoles(struct stack *src, struct stack *dest, char s, char d)
+{
+ int pole1TopDisk = pop(src);  
+    int pole2TopDisk = pop(dest);  
+    if (pole1TopDisk ==INT_MIN)  
+    {  
+        push(src, pole2TopDisk);  
+        moveDisk(d, s, pole2TopDisk);  
+    }  
+    else if (pole2TopDisk ==INT_MIN)  
+    {  
+        push(dest, pole1TopDisk);  
+        moveDisk(s, d, pole1TopDisk);  
+    }  
+    else if (pole1TopDisk > pole2TopDisk)  
+    {  
+        push(src, pole1TopDisk);  
+        push(src, pole2TopDisk);  
+        moveDisk(d, s, pole2TopDisk);  
+    }  
+    else
+    {  
+        push(dest, pole2TopDisk);  
+        push(dest, pole1TopDisk);  
+        moveDisk(s, d, pole1TopDisk);  
+    }  
+}
+ 
+void hanoiIterative(int num_of_disks, struct stack *src, struct stack *aux, struct stack *dest)
+{
+  	int i, total_num_of_moves;  
+    char s = 'S', d = 'D', a = 'A';  
+      if (num_of_disks % 2 == 0)  
+    {  
+        char temp = d;  
+        d = a;  
+        a = temp;  
+    }  
+    total_num_of_moves = pow(2, num_of_disks) - 1;  
+    for (i = num_of_disks; i >= 1; i--)  
+        push(src, i);  
+  
+    for (i = 1; i <= total_num_of_moves; i++)  
+    {  
+        if (i % 3 == 1)  
+        moveDisksBetweenTwoPoles(src, dest, s, d);  
+  
+        else if (i % 3 == 2)  
+        moveDisksBetweenTwoPoles(src, aux, s, a);  
+  
+        else if (i % 3 == 0)  
+        moveDisksBetweenTwoPoles(aux, dest, a, d);  
+    }  
+}
