@@ -1,0 +1,111 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+struct software {
+	char name[15];
+	int memory;
+	struct software * link;
+};
+void append ( struct software **,char[] ,int ) ;
+void display ( struct software * ) ;
+void findmin (struct software *);
+
+int main() {
+	struct software *p ;
+	p=NULL;
+	int n;
+	char ch[10];
+	int choice=1;
+do
+{
+	printf("1.Insert new software\n2.Display all the softwares\n3.Get the minimum memory software\n4.Exit\nEnter your choice\n");
+	scanf("%d",&choice);
+	switch(choice)
+	{
+		case 1:
+			printf("Enter the software name\n");
+			scanf("%s",ch);
+			do{
+			printf("Enter the memory used\n");
+			scanf("%d",&n);
+			}while(n==0);
+			append(&p,ch,n);
+			break;
+		case 2:
+		    if(p!=NULL){
+		    printf("Software list:\n");
+			display(p);
+		    }
+		    else
+		    printf("Software list is empty");
+			break;
+		case 3:
+		    if(p!=NULL){
+		    printf("Minimum memory Software is:\n");
+			findmin(p);
+		    }
+		    else
+		    printf("Software list is empty");
+			break;
+		case 4:
+			printf("Exit\n");
+			break;
+		}
+	}while(choice>=1 && choice<4);
+	return 0;
+}
+
+void append ( struct software **q,char sname[15], int num ) {
+    struct software* t;
+	int i;
+    for(i=0;i<1;i++)
+    {
+        t=(struct software*)malloc(sizeof(struct software));
+        t->memory=num;
+        strcpy(t->name,sname);
+        if (*q==NULL)
+        {
+            *q=t;
+            (*q)->link=NULL;
+        }
+        else
+        {
+            struct software* te=(*q);
+            while(te->link!=NULL){
+            	te=te->link;
+			}
+			te->link=t;
+			t->link=NULL;
+        }
+    }
+}
+
+void display ( struct software *q ) {
+    struct software* t=q;
+    int i=1;
+	while(t!=NULL){
+		printf("%d) %s %d\n",i,t->name,t->memory);
+		t=t->link;
+		i++;
+	}
+}
+void findmin ( struct software *q ){
+    struct software* t=q->link;
+	struct software* t1=q;
+	int max=q->memory;
+	while(t!=NULL){
+	if(max>t->memory){
+	max=t->memory;
+    }
+	else
+	t=t->link;	
+	}
+	while(t1!=NULL){
+		if(t1->memory==max){
+		printf("%s %d\n",t1->name,t1->memory);
+		break;
+	    }
+	    else
+	    t1=t1->link;
+	}
+}

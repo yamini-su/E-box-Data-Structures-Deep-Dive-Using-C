@@ -1,0 +1,97 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+struct keyboard {
+	int key;
+	struct keyboard * link;
+};
+void insert ( struct keyboard **, int ) ;
+void display ( struct keyboard * ) ;
+
+
+int main() {
+	struct keyboard *p=NULL;
+	int k,choice=1;	
+do{
+	printf("1.Enter a disassembled key\n2.View keyboard\n3.Exit\nEnter your choice\n");
+	scanf("%d",&choice);
+	switch(choice){
+	case 1:
+	printf("Enter the key number\n");
+		scanf("%d",&k);
+		if(k>=0 && k<=9){
+		insert(&p,k);
+		}
+		else{
+		printf("Enter the key number\n");
+		scanf("%d",&k);
+		if(k>=0 && k<=9){
+		insert(&p,k);
+		}
+		else{
+		printf("Enter the key number\n");
+		scanf("%d",&k);
+		if(k>=0 && k<=9){
+		insert(&p,k);
+		}
+		}
+		}
+		break;
+	case 2:
+	    if(p==NULL){
+    	printf("Keyboard has no disassembled key\n");
+	    }
+	    else{
+	        printf("Keyboard:\n");
+		display(p);
+	    }
+		break;
+	case 3:
+		printf("Exit\n");
+		break;
+}
+}while(choice!=3);
+}
+
+void insert ( struct keyboard **q, int num ){
+    struct keyboard* t;
+	int i;
+    for(i=0;i<1;i++)
+    {
+        t=(struct keyboard*)malloc(sizeof(struct keyboard));
+        t->key=num;
+        if (*q==NULL)
+        {
+            *q=t;
+            (*q)->link=NULL;
+        }
+        else
+        {
+            t->link=*q;
+            *q=t;
+        }
+    }
+}
+
+void display ( struct keyboard *q ) {
+   struct keyboard*c=q,*in=NULL;
+	int te;
+	while(c!=NULL){
+		in=c->link;
+		while(in!=NULL){
+			if(c->key>in->key){
+				te=c->key;
+				c->key=in->key;
+				in->key=te;
+			}
+			in=in->link;
+	}
+	c=c->link;
+    }
+    struct keyboard* t=q;
+    while(t!=NULL){
+	printf("%d ",t->key);
+		t=t->link;
+	}
+	printf("\n");
+}

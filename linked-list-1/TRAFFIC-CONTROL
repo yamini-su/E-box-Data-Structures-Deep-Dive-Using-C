@@ -1,0 +1,110 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+struct vehicle{
+	int data;
+	struct vehicle* link;
+};
+void append ( struct vehicle**, int ) ;
+void display ( struct vehicle* ) ;
+void reverse (struct vehicle**);
+
+int main() {
+	struct vehicle*p;
+	p=NULL;
+	int n,x=0;            
+	do {
+	printf("1.Insert\n2.Display\n3.Reverse\n4.Exit\n");
+                	printf("Enter your choice :\n");
+                	scanf("%d",&x);
+	switch(x)
+                 	{
+                		case 1:
+			printf("Enter the vehicle number\n");
+			scanf("%d",&n);
+			append(&p,n);
+                			break;
+                		case 2:
+			if(p==NULL)
+			{
+
+				printf("Route is clear");
+			}
+			else
+			{
+				printf("The vehicles in the route are \n");
+				display(p);
+			}
+                			printf("\n");
+			break;	
+                		case 3:
+                
+			if(p==NULL)
+			{
+				printf("There are no vehicle to redirect");
+			}
+			else
+			{
+				printf("The vehicles in the route after redirecting\n");
+				reverse(&p);
+				display(p);
+			}
+			printf("\n");
+			break;
+		case 4:
+               			printf("Task accomplished\n");
+			break;
+
+	}} while(x!=4);
+
+	return 0;
+}
+
+
+void append ( struct vehicle**q, int num ) {
+	struct vehicle* t;
+	int i;
+    for(i=0;i<1;i++)
+    {
+        t=(struct vehicle*)malloc(sizeof(struct vehicle));
+        t->data=num;
+        if (*q==NULL)
+        {
+            *q=t;
+            (*q)->link=NULL;
+        }
+        else
+        {
+            struct vehicle* te=(*q);
+            while(te->link!=NULL){
+            	te=te->link;
+			}
+			te->link=t;
+			t->link=NULL;
+        }
+    }
+}
+
+void display ( struct vehicle *q ){
+	struct vehicle* t=q;
+	while(t!=NULL){
+		printf("%d ",t->data);
+		t=t->link;
+	}
+}
+void reverse(struct vehicle**x){
+    struct vehicle*p,*q,*r;
+    p=q=r=*x;
+    p=p->link->link;
+    q=q->link;
+    r->link=NULL;
+    q->link=r;
+    while (p!=NULL)
+    {
+        r=q;
+        q=p;
+        p=p->link;
+        q->link=r;
+    }
+    *x=q;
+}

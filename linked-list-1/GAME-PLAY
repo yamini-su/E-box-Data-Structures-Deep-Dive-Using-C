@@ -1,0 +1,96 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+struct process {
+	int memory;
+	struct process * link;
+};
+void append ( struct process **, int ) ;
+void display ( struct process * ) ;
+void findmax (struct process *);
+
+int main() {
+	struct process *p ;
+	p=NULL;
+	int n;
+	int ch=1;
+do
+{
+	printf("1.Insert new process memory usage\n2.Display all the memory usage\n3.Get the maximum memory\n4.Exit\nEnter your choice\n");
+	scanf("%d",&ch);
+	switch(ch)
+	{
+		case 1:
+			printf("Enter the memory usage\n");
+			scanf("%d",&n);
+			append(&p,n);
+			break;
+		case 2:
+		if(p!=NULL){
+		    printf("Memory usage list:\n");
+			display(p);
+			printf("\n");
+		}
+		else
+		printf("Memory usage list is empty\n");
+			break;
+		case 3:
+		    if(p!=NULL){
+		    printf("Maximum memory used : ");
+			findmax(p);
+		    }
+		    else
+		    printf("Memory usage list is empty\n");
+			break;
+		case 4:
+			printf("Exit\n");
+			break;
+		}
+	}while(ch>=1 && ch<4);
+	return 0;
+}
+
+
+void append ( struct process **q, int num ) {
+    struct process* t;
+	int i;
+    for(i=0;i<1;i++)
+    {
+        t=(struct process*)malloc(sizeof(struct process));
+        t->memory=num;
+        if (*q==NULL)
+        {
+            *q=t;
+            (*q)->link=NULL;
+        }
+        else
+        {
+            struct process* te=(*q);
+            while(te->link!=NULL){
+            	te=te->link;
+			}
+			te->link=t;
+			t->link=NULL;
+        }
+    } 
+}
+
+void display ( struct process *q ) {
+	struct process* t=q;
+	while(t!=NULL){
+		printf("%d ",t->memory);
+		t=t->link;
+	}
+}
+
+void findmax ( struct process *q ){
+	struct process* t=q->link;
+	int max=q->memory;
+	while(t!=NULL){
+	if(max<t->memory)
+	max=t->memory;
+	else
+	t=t->link;	
+	}
+	printf("%d\n",max);
+}

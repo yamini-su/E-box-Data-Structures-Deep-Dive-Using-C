@@ -1,0 +1,154 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<stdbool.h>
+struct harry
+{
+    char data;
+    struct harry* next;
+};
+
+void reverse(struct harry**);
+bool compare(struct harry*, struct harry *);
+bool isMagical(struct harry *head);
+void display(struct harry *p);
+ void insert(struct harry** head, char data);
+
+int main() {
+	struct harry *p ;
+	p=NULL;
+	int choice;
+	char str;
+do
+	{
+	printf("1.Magical spell letter\n2.Display the Magical spell\n3.isMagical\n4.Exit\nEnter your choice\n");
+		scanf("%d",&choice);
+		switch(choice){
+			case 1:
+				printf("Enter a Magical spell letter\n");
+				scanf("\n%c",&str);
+				insert(&p,str);
+				break;
+			case 2:
+			    if(p!=NULL){
+			    reverse(&p);
+				display(p);
+			    }
+			    else
+			    printf("There is no Magical spell\n");
+				break;
+			case 3:
+				isMagical(p)? printf("Magical Spell\n"):printf("Not a magical spell\n");
+				p=NULL;
+				break;
+			case 4:
+				printf("Exit\n");
+				break;
+			}
+		}while(choice!=4);
+	return 0;
+}
+
+bool isMagical(struct harry *head)
+{
+	struct harry* t1=head;
+	struct harry* te=NULL;
+	while(t1!=NULL){
+    struct harry *t=(struct harry*)malloc(sizeof(struct harry));
+    t->data=t1->data;
+	if(te==NULL){
+	    te=t;
+        te->next=NULL;	
+	}
+	else{
+	    struct harry* te1=(te);
+        while(te1->next!=NULL){
+           	te1=te1->next;
+		}
+		te1->next=t;
+		t->next=NULL;	
+	}
+	t1=t1->next;
+    }
+    reverse(&te);
+    if(compare(te,head) )
+	return 1;
+	else
+	return 0; 
+}
+ 
+
+void reverse(struct harry** head)
+{
+    struct harry*p,*q,*r;
+    p=q=r=*head;
+    p=p->next->next;
+    q=q->next;
+    r->next=NULL;
+    q->next=r;
+    while (p!=NULL)
+    {
+        r=q;
+        q=p;
+        p=p->next;
+        q->next=r;
+    }
+    *head=q;
+}
+ 
+
+bool compare(struct harry* head1, struct harry *head2)
+{
+    struct harry *p=head1,*q=head2;
+    while (p != NULL && q != NULL)
+    {
+        if (p->data!= q->data)
+        {
+            return 0;
+        }
+        else
+        {
+            p = p->next;
+            q = q->next;
+        }
+    }
+    if (p != NULL || q != NULL)
+    {
+        return 0;
+    }
+    else
+    {
+        return 1;
+    }
+}
+ 
+void insert(struct harry** head, char data)
+{
+    struct harry* t;
+    t=(struct harry*)malloc(sizeof(struct harry));
+    t->data=data;
+    if (*head==NULL)
+    {
+        *head=t;
+        (*head)->next=NULL;
+    }
+    else
+    {
+        struct harry* te=(*head);
+        while(te->next!=NULL){
+           	te=te->next;
+		}
+		te->next=t;
+		t->next=NULL;
+    }
+}
+ 
+
+void display(struct harry *p)
+{
+  struct harry* t=p;
+	while(t!=NULL){
+		printf("%c",t->data);
+		t=t->next;
+	}
+	printf("\n");
+}
