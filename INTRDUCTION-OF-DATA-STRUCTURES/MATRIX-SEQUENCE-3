@@ -1,0 +1,40 @@
+#include <stdio.h>
+int main()
+{
+  int m, n, c, d, matrix[100][100], maximum,k;
+
+  printf("Enter the number of rows\n");
+  scanf("%d",&m);
+printf("Enter the number of columns\n");
+  scanf("%d",&n);
+  printf("Enter the elements in the matrix in rowwise order\n");
+
+  for (c = 0; c < m; c++)
+    for(d = 0; d < n; d++)
+      scanf("%d", &matrix[c][d]);
+  printf("Enter the row number of the matrix\n");
+scanf("%d",&k);
+printf("\nThe input matrix is\n");
+
+  for (c = 0; c < m; c++)
+  {
+    for(d = 0; d < n; d++)
+      printf("%d ", matrix[c][d]);
+    printf("\n");
+  }
+ if(k>m)
+{
+    printf("Enter a valid row number");
+}
+else
+{
+maximum = 0;
+
+  for (c = 0; c < n; c++)
+      if (matrix[k-1][c] > maximum)
+        maximum = matrix[k-1][c];
+ printf("The maximum element in row number %d is %d ",k,maximum);  
+}
+
+  return 0;
+}
