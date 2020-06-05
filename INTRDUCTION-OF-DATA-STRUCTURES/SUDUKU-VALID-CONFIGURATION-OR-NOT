@@ -1,0 +1,48 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<math.h>
+int n;
+int checkgrid(int **a,int row,int col,int check1,int sum)
+{    int i,j;
+    for(i=row;i<(row+sqrt(n));i++)
+    for(j=col;j<(col+sqrt(n));j++)
+    {
+        if(!(a[i][j]>=1 && a[i][j]<=n)){return 1;}
+        check1=check1+a[i][j];
+    }
+    if(sum!=check1)return 1;
+    return 0;
+}
+int main()
+{	int sum=0,check1=0,check2=0,flag=0,i,j;
+	scanf("%d",&n);
+  	if(n%2==0)	sum=(pow(n,2)/2)+(n/2);
+	else sum=(n-(n/2))*n;
+    int **a=(int**)malloc(sizeof(int*)*n);
+	for(i=0;i<n;i++)a[i]=malloc(n*sizeof(int));
+	for(i=0;i<n;i++)
+	    for(j=0;j<n;j++)
+	      scanf("%d",&a[i][j]);
+	for(i=0;i<n;i++)
+	{   check1=0;check2=0;
+	    for(j=0;j<n;j++)
+	    {
+	        if(!(a[i][j]>=1&&a[i][j]<=n)){printf("no");
+                 return 0;}
+	        check1+=a[i][j];check2+=a[j][i];
+	    }
+	    if(check1!=sum||check2!=sum) {flag=1;break;}
+	}
+	 if(flag!=1)
+	 {  
+	     for(i=0;i<n;i=i+sqrt(n))
+	        for(j=0;j<n;j=j+sqrt(n))
+	         {
+       	      flag=checkgrid(a,i,j,0,sum);
+              if(flag){printf("no");return 0;}
+	         }
+	 }
+	if(flag)printf("no");
+	else	printf("yes");
+	return 0;
+}
