@@ -1,0 +1,51 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+struct file {
+	int number;
+	struct file * link;
+};
+void append ( struct file **, int ) ;
+void display ( struct file * ) ;
+void ascending ( struct file *);
+
+int main() {
+	struct file *p ;
+	p=NULL;
+	int number,choice=1;
+	
+while(choice<4){
+	printf("1.Enter a new file\n2.View desktop\n3.Arrange in order\n4.Exit\nEnter your choice\n");
+	scanf("%d",&choice);
+	switch(choice){
+	case 1:
+	do{
+		printf("Enter the file\n");
+		scanf("%d",&number);
+		}while(number>0 && number >100);
+			append(&p,number);
+		break;
+	case 2:
+		display(p);
+		break;
+	case 3:
+		ascending(p);
+		display(p);
+		break;
+	case 4:
+		printf("Exit\n");
+		break;
+}
+}
+	return 0;
+}
+
+void append ( struct file **q, int num ) {
+// Fill in the code here
+}
+void ascending ( struct file *q ) {
+// Fill in the code here
+}
+void display ( struct file *q ) {
+// Fill in the code here
+}
