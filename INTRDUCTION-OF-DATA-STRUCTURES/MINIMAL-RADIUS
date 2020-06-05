@@ -1,0 +1,25 @@
+#include<stdio.h>
+#include<limits.h>
+#include<math.h>
+void get(int *,int *,int n);
+int main(){
+    int min1=INT_MAX,max1=INT_MIN,min2=INT_MAX,max2=INT_MIN,n;
+    printf("Enter the number of Poles\n");
+    scanf("%d",&n);
+    printf("Enter the x-coordinate's\n");
+    get(&min1,&max1,n);
+    printf("Enter the y-coordinate's\n");
+    get(&min2,&max2,n);
+    printf("The radius of the circle is %0.2f",sqrt(pow(max1-min1,2)+pow(max2-min2,2))/2);
+    return 0;
+}
+void get(int *min,int *max,int n){
+    int x;
+    while(n--){
+        scanf("%d",&x);
+        if (x < *min)
+            *min = x;
+        if (x > *max)
+            *max = x;
+    }
+}
