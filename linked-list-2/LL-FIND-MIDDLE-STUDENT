@@ -1,0 +1,104 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+struct student
+{
+  int id;
+  char name[10];
+  char gender[10];
+  struct student * link;
+};
+void append ( struct student **, struct student ) ;
+void display ( struct student * ) ;
+int count ( struct student *);
+void findmid (struct student *);
+
+
+int main() {
+	struct student *p ;
+	p=NULL;
+	struct student s;
+  	char ch[10];
+	do {
+		printf("Enter the id\n");
+		scanf("%d",&s.id);
+    		printf("Enter the name\n");
+		scanf("%s",s.name); 
+		printf("Enter the gender\n");
+		scanf("%s",s.gender);
+		s.link=NULL;
+		append(&p,s);
+    		printf("Do you want to add details of another student? Type Yes/No\n");
+		scanf("%s",ch);
+	} while(!strcmp(ch,"Yes"));
+	printf("The details of the students are\n");
+	printf("%4s %10s %7s\n","ID","Name","Gender");
+	display(p);
+	printf("The middle student in the list is \n");
+	printf("%4s %10s %7s\n","ID","Name","Gender");
+  	findmid(p);
+  	printf("\n");
+	return 0;
+}
+
+void append ( struct student **q, struct student s ) {
+	struct student* t;
+    t=(struct student*)malloc(sizeof(struct student));
+    t->id=s.id;
+    strcpy(t->name,s.name);
+    strcpy(t->gender,s.gender);
+    if (*q==NULL)
+    {
+        *q=t;
+        (*q)->link=NULL;
+    }
+    else
+    {
+        struct student* te=(*q);
+        while(te->link!=NULL){
+          	te=te->link;
+		}
+		te->link=t;
+		t->link=NULL;
+    }
+  }
+
+void display ( struct student *q ) {
+  struct student * temp=q;
+  while(temp!=NULL)
+  {
+    printf("%4d ",temp->id);
+    printf("%10s ",temp->name);
+    printf("%7s ",temp->gender);
+    printf("\n");
+    temp=temp->link;
+  }
+}
+
+int count ( struct student *q ) {
+  struct student *temp=q;
+  int c=0;
+  while(temp!=NULL)
+  {
+    c=c+1;
+    temp=temp->link;
+  }
+  return c;
+}
+
+void findmid ( struct student *q) {
+  	int i=count(q);
+  	int z=i/2;
+  	if(i%2!=0)
+  	z=z+1;
+  	int c=1;
+  	struct student* t=q;
+  	while(t!=NULL && c<z){
+  		t=t->link;
+  		c++;
+	}
+    printf("%4d ",t->id);
+    printf("%10s ",t->name);
+    printf("%7s ",t->gender);
+    printf("\n");
+  }
