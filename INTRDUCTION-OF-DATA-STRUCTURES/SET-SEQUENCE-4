@@ -1,0 +1,51 @@
+#include<stdio.h>
+int main(){
+    int n,m,i,j=0,count=0,k,temp=0,x;
+    printf("Enter the number of elements in the first array\n");
+    scanf("%d",&n);
+    int a[n],c[n];
+    printf("Enter the elements in the first array\n");
+    for(i=0;i<n;i++)
+    scanf("%d",&a[i]);
+    printf("Enter the number of elements in the second array\n");
+    scanf("%d",&m);
+    int b[m];
+    printf("Enter the elements in the second array\n");
+    for(i=0;i<m;i++)
+    scanf("%d",&b[i]);
+    printf("Enter the value of x\n");
+    scanf("%d",&x);
+    printf("The first array is\n");
+    for(i=0;i<n;i++)
+    printf("%d ",a[i]);
+    printf("\nThe second array is\n");
+    for(i=0;i<m;i++)
+    printf("%d ",b[i]);
+    for(i=0;i<n;i++){
+        for(k=-x;k<=x;k++){
+        if(a[i]==b[i]+k){
+        c[j++]=i+1;
+        count++;
+        break;
+        }
+    }
+    }
+    for(i=0;i<j;i++){
+        for(k=i+1;k<j;k++){
+            if(c[i]>c[k]){
+                temp=c[i];
+                c[i]=c[k];
+                c[k]=temp;
+            }
+        }
+    }
+        if(count==0){
+        printf("There are no elements in the new array\n");
+        }
+        else{
+            printf("\nThe new array formed is\n");
+            for(i=0;i<j;i++)
+           printf("%d ",c[i]);
+       
+    }
+}
