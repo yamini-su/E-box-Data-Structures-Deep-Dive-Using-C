@@ -1,0 +1,56 @@
+#include<stdio.h>
+#include<stdlib.h>
+int search(int *,int ,int );
+
+int search(int *a,int key,int n){
+    for(int i=0;i<n;i++){
+        if(*(a+i) == key)
+            return 0;
+    }
+    return 1;
+}
+
+int main(){
+    int n,m,s=-1,e=-1;
+    printf("Enter the number of elements in the first array\n");
+    scanf("%d",&n);
+    printf("Enter the elements in the first array\n");
+    int *a = (int *)malloc(n*sizeof(int));
+    for(int i=0;i<n;i++){
+        scanf("%d",a+i);
+    }
+    printf("Enter the number of elements in the second array\n");
+    scanf("%d",&m);
+    int *b = (int *)malloc(m*sizeof(int));
+    printf("Enter the elements in the second array\n");
+    for(int i=0;i<m;i++){
+        scanf("%d",b+i);
+    }
+    printf("The first array is\n");
+    for(int i=0;i<n;i++){
+        printf("%d ",*(a+i));
+    }
+    printf("\n");
+    printf("The second array is\n");
+    for(int i=0;i<m;i++){
+        printf("%d ",*(b+i));
+    }
+    printf("\n");
+    for(int i=0;i<n;i++){
+        if(search(b,*(a+i),m)){
+            if(s == -1)
+                s = e = i;
+            else
+                e += 1;
+        }      
+    }
+    if(s == -1)
+        printf("No item in the new array\n");
+    else{
+        printf("The new array formed is\n");
+        for(int i=s;i<=e;i++){
+            printf("%d ",*(a+i));
+        }
+    }
+    return 0;
+}
