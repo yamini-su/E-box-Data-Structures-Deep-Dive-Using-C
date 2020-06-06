@@ -1,91 +1,136 @@
+
 #include <stdio.h>
-#include <limits.h>
-#include <stdlib.h> 
+#include <stdlib.h>
+#include <string.h>
  
-// A utility function to find the vertex with minimum key value, from
-// the set of vertices not yet included in MST
-int minKey(int key[], int mstSet[], int V)
+// a structure to represent a weighted edge in graph
+struct Edge{
+    int src, dest, weight;
+};
+ 
+// a structure to represent a connected, undirected and weighted graph
+struct Graph
 {
-   // Initialize min value
-   int min = INT_MAX, min_index;
-	int v;
-   for (v = 0; v < V; v++)
-     if (mstSet[v] == 0 && key[v] < min && key[v])
-         min = key[v], min_index = v;
+    // V-> Number of vertices, E-> Number of edges
+    int V, E;
+    
+    // graph is represented as an array of edges. Since the graph is
+    // undirected, the edge from src to dest is also edge from dest
+    // to src. Both are counted as 1 edge here.
+    struct Edge* edge;
+};
  
-   return min_index;
-}
-
-int allVisited(int n, int *visited){
-    int i, res = 1;
-    for(i = 0; i < n; i++)
-        res &= visited[i];
-    return res;
-}
-
-// A utility function to print the constructed MST stored in parent[]
-void printMST(int parent[], int V, int **graph)
+// Creates a graph with V vertices and E edges
+struct Graph* createGraph(int V, int E)
 {
-	int i;
-   for (i = 1; i < V; i++)
-      printf("%d - %d  %d\n", parent[i], i, graph[i][parent[i]]);
-}
-
-int min(int x, int y){
-    return x < y ? x : y;
+    struct Graph* graph = (struct Graph*) malloc( sizeof(struct Graph) );
+    graph->V = V;
+    graph->E = E;
+ 
+    graph->edge = (struct Edge*) malloc( graph->E * sizeof( struct Edge ) );
+ 
+    return graph;
 }
  
-// Function to construct and print MST for a graph represented using adjacency
-// matrix representation
-void primMST(int **graph, int V){
-
-    int i, src = 0;
-    int *parent = (int*)malloc(V * sizeof(int));
-    int *visited = (int*)calloc(V, sizeof(int));
-    int *dist = (int*)malloc(V * sizeof(int));
+// A structure to represent a subset for union-find
+struct subset
+{
+    int parent;
+    int rank;
+};
+ 
+// A utility function to find set of an element i
+// (uses path compression technique)
+int find(struct subset subsets[], int i)
+{
+    // find root and make root as parent of i (path compression)
+    if (subsets[i].parent != i)
+        subsets[i].parent = find(subsets, subsets[i].parent);
+ 
+    return subsets[i].parent;
+}
+ 
+// A function that does union of two sets of x and y
+// (uses union by rank)
+void Union(struct subset subsets[], int x, int y)
+{
+    int xroot = find(subsets, x);
+    int yroot = find(subsets, y);
+ 
+    // Attach smaller rank tree under root of high rank tree
+    // (Union by Rank)
+    if (subsets[xroot].rank < subsets[yroot].rank)
+        subsets[xroot].parent = yroot;
+    else if (subsets[xroot].rank > subsets[yroot].rank)
+        subsets[yroot].parent = xroot;
+ 
+    // If ranks are same, then make one as root and increment
+    // its rank by one
+    else
+    {
+        subsets[yroot].parent = xroot;
+        subsets[xroot].rank++;
+    }
+}
+ 
+// Compare two edges according to their weights.
+// Used in qsort() for sorting an array of edges
+int myComp(const void* a, const void* b)
+{
+    struct Edge* a1 = (struct Edge*)a;
+    struct Edge* b1 = (struct Edge*)b;
+    return a1->weight > b1->weight;
+}
+ 
+// The main function to construct MST using Kruskal's algorithm
+void KruskalMST(struct Graph* graph)
+{
+    qsort(graph->edge, graph->E, sizeof(graph->edge[0]), myComp);
+    int i;
+    // for(i=0;i<graph->E; i++)
+    //     printf("%d %d %d\n", graph->edge[i].src, graph->edge[i].dest, graph->edge[i].weight);
     
-    for(i = 0; i < V; i++)
-        dist[i] = 9999;
+    struct subset subsets[graph->V];
     
-    dist[src] = 0;
-    
-    while(!allVisited(V, visited)){
-        visited[src] = 1;
-
-        for(i = 0; i < V; i++){
-            if(dist[i] > graph[src][i] && !visited[i] && graph[src][i]){
-                dist[i] = graph[src][i];
-                parent[i] = src;
-            }
+    for(i=0;i<graph->V;i++)
+        subsets[i].parent = i, subsets[i].rank = 1;
+    printf("Following are the edges in the constructed MST\n");
+    for( i = 0; i < graph->E; i++){
+        if(find(subsets, graph->edge[i].src) != find(subsets, graph->edge[i].dest)){
+            Union(subsets, graph->edge[i].src, graph->edge[i].dest);
+            printf("Edge %d and Edge %d with distance %d\n",graph->edge[i].src, graph->edge[i].dest, graph->edge[i].weight);
         }
-        src = minKey(dist, visited, V);
-    }    
- 
-     // print the constructed MST
-     printMST(parent, V, graph);
+        
+    }
+    
+    
+    
+    // // print the contents of result[] to display the built MST
+    // 
+    // for (i = 0; i < e; ++i)
+    //     printf("Edge %d and Edge %d with distance %d\n", result[i].src, result[i].dest, result[i].weight);
+    // return;
 }
  
- 
-// driver program to test above function
+// Driver program to test above functions
 int main()
 {
-	int V,i,j;
-	printf("Enter the number of vertices in the graph\n");
+    int V;
+    int E;
+    int i;
+    printf("Enter the number of vertices\n");
 	scanf("%d",&V);
-	int **graph;
-	graph = (int **) malloc(sizeof(int*)*V);
-	for(i=0;i<V;i++){
-		*(graph+i) = (int *)malloc(sizeof(int)*V);
-	}
-	printf("Enter the distance matrix of the graph\n");
-	for(i=0;i<V;i++){
-		for(j=0;j<V;j++){
-			scanf("%d",&graph[i][j]);
-		}
-	}
-    // Print the solution
-    printf("\nThe edges are picked in the following order\n");
-    primMST(graph,V);
+	printf("Enter the number of edges\n");
+	scanf("%d",&E);
+    struct Graph* graph = createGraph(V, E);
  
+	for(i=0;i<E;i++){
+		printf("Enter source, destination and weight of edge %d\n",i+1);
+		scanf("%d",&(graph->edge[i].src));
+		scanf("%d",&(graph->edge[i].dest));
+		scanf("%d",&(graph->edge[i].weight));
+	}
+	
+    KruskalMST(graph);
     return 0;
 }
